@@ -3,7 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-let connectedClients = [];
+let connectedSockets = [];
+let connectedPlayers = [];
 
 /* 
 Mongo DB connection
@@ -15,30 +16,49 @@ var dataBase;
 
 io.on('connect', function(socket) {
 
-    console.log("test");
+    socket.on('join', (data) => {
+        connectedSockets.push(socket);
+        connectedPlayers.push(new Player(socket.id, data.x, data.y, data.rotX, data.rotY));
+        var dataObject = new JoinPacket(socket.id, data.x, data.y, data.rotX, data.rotY);
 
-    socket.on('join', function(client) {
-        connectedClients.push(client);
-        BroadCastToClients('join', client.id);
-        console.log(client.id + " Joined the game");
+        //We need to send the new player all the other players! Otherwise he will be alone forever!!
+        connectedPlayers.forEach(player => {
+            socket.emit('join', player);
+        });
+
+        BroadCastToClients('join', dataObject);
+        console.log(dataObject.clientId + " Joined the game");
     });
     
-    socket.on('quit', function(client){
-        connectedClients.push(client);
-        BroadCastToClients('quit', client.id);
-        console.log(client + " left the game");
+    socket.on('disconnect', () => {
+        connectedSockets.splice(socket);
+        connectedPlayers.forEach(player => {
+            if(player.clientId == socket.id){
+                connectedPlayers.splice(player);
+            }
+        });
+        var dataObject = new QuitPacket(socket.id);
+    
+        BroadCastToClients('quit', dataObject);
+        console.log(dataObject.clientId + " left the game");
     });
     
-    socket.on('move', function(data){
-        console.log("test");
-        //BroadCastToClients('move', data);
+    socket.on('move', function(data) {
+        connectedPlayers.forEach(player => {
+            if(player.clientId == data.clientId){
+                player.x = parseFloat(data.x);
+                player.y = parseFloat(data.y);
+            }
+        });
+    
+        BroadCastToClients('move', data);
     });
 
 });
 
 function BroadCastToClients(functionName, data) {
-    connectedClients.forEach(client => {
-        client.emit(functionName, data); 
+    connectedSockets.forEach(socket => {
+        socket.emit(functionName, data); 
     });
 }
 
@@ -46,3 +66,32 @@ http.listen(3000, function() {
     //Announce we're live
     console.log('listening on *:3000');
 });
+
+/* Server sided data objects (can be used as packets) */
+class Player {
+    constructor(clientId, x, y, rotX, rotY) {
+        this.clientId = clientId;
+        this.x = parseFloat(x);
+        this.y = parseFloat(y);
+        this.rotX = parseFloat(rotX);
+        this.rotY = parseFloat(rotY);
+    }
+}
+
+/* Packets */
+
+class JoinPacket {
+    constructor(clientId, x, y, rotX, rotY) {
+        this.clientId = clientId;
+        this.x = x;
+        this.y = y;
+        this.rotX = rotX;
+        this.rotY = rotY;
+    }
+}
+
+class QuitPacket {
+    constructor(clientId) {
+        this.clientId = clientId;
+    }
+}
