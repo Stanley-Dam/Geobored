@@ -22,23 +22,31 @@ io.on('connect', function(socket) {
         var dataObject = new JoinPacket(socket.id, data.x, data.y, data.rotX, data.rotY);
 
         //We need to send the new player all the other players! Otherwise he will be alone forever!!
-        if(connectedPlayers != []) {
-            connectedPlayers.forEach(player => {
-                socket.emit('join', player);
-            });
-        }
+        connectedPlayers.forEach(player => {
+            socket.emit('join', player);
+        });
 
         BroadCastToClients('join', dataObject);
         console.log(dataObject.clientId + " Joined the game");
     });
     
     socket.on('disconnect', () => {
-        connectedSockets.splice(socket);
+        var index = 0;
+        connectedSockets.forEach(currentSocket => {
+            if(socket == currentSocket){
+                connectedSockets.splice(index);
+            }
+            index++;
+        });
+
+        index = 0;
         connectedPlayers.forEach(player => {
             if(player.clientId == socket.id){
-                connectedPlayers.splice(player);
+                connectedPlayers.splice(index);
             }
+            index++;
         });
+
         var dataObject = new QuitPacket(socket.id);
     
         BroadCastToClients('quit', dataObject);
@@ -50,6 +58,8 @@ io.on('connect', function(socket) {
             if(player.clientId == data.clientId){
                 player.x = parseFloat(data.x);
                 player.y = parseFloat(data.y);
+                player.rotZ = parseFloat(data.rotZ);
+                player.rotY = parseFloat(data.rotY);
             }
         });
     
@@ -71,11 +81,11 @@ http.listen(3000, function() {
 
 /* Server sided data objects (can be used as packets) */
 class Player {
-    constructor(clientId, x, y, rotX, rotY) {
+    constructor(clientId, x, y, rotZ, rotY) {
         this.clientId = clientId;
         this.x = parseFloat(x);
         this.y = parseFloat(y);
-        this.rotX = parseFloat(rotX);
+        this.rotZ = parseFloat(rotZ);
         this.rotY = parseFloat(rotY);
     }
 }
@@ -83,11 +93,11 @@ class Player {
 /* Packets */
 
 class JoinPacket {
-    constructor(clientId, x, y, rotX, rotY) {
+    constructor(clientId, x, y, rotZ, rotY) {
         this.clientId = clientId;
         this.x = x;
         this.y = y;
-        this.rotX = rotX;
+        this.rotZ = rotZ;
         this.rotY = rotY;
     }
 }
