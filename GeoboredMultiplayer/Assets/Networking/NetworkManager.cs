@@ -6,18 +6,20 @@ using UnityEngine;
 public class NetworkManager : MonoBehaviour {
 
     [SerializeField] private SocketIO.SocketIOComponent socket;
-    [SerializeField] private GameObject playerPrefab;
+    private GameObject playerPrefab;
 
     private ArrayList players = new ArrayList();
     private bool joined = false;
 
     // Start is called before the first frame update
     void Start() {
+        playerPrefab = Resources.Load<GameObject>("Players/Player1");
+
         //Start listening to all the server events
-        socket.On("connect", PlayerJoinServer);
         socket.On("move", MovePlayer);
         socket.On("join", PlayerJoin);
         socket.On("quit", PlayerQuit);
+        socket.On("connect", PlayerJoinServer);
     }
 
     /* Send data to the server. */
@@ -51,7 +53,7 @@ public class NetworkManager : MonoBehaviour {
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
 
         foreach(Player player in players) {
-            if(player.GetSocketId() == data["clientId"])
+            if(player.GetSocketId() == data["clientId"] &! player.GetIfMainPlayer())
                 player.transform.position = new Vector3(float.Parse(data["x"]), float.Parse(data["y"]));
         }
     }
@@ -60,16 +62,17 @@ public class NetworkManager : MonoBehaviour {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
 
-        if(data["clientId"] == socket.sid) {
+        if(data["clientId"] == socket.sid &! joined) {
+            joined = true;
+
             GameObject newPlayer = Instantiate(playerPrefab,
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(float.Parse(data["rotX"]), float.Parse(data["rotY"]), 0));
 
-            joined = true;
             Player player = newPlayer.GetComponent<Player>();
             player.Init(this, data["clientId"], true);
             players.Add(player);
-        } else {
+        } else if(data["clientId"] != socket.sid) {
             GameObject newPlayer = Instantiate(playerPrefab,
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(float.Parse(data["rotX"]), float.Parse(data["rotY"]), 0));
