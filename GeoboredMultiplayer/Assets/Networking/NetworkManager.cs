@@ -36,11 +36,13 @@ public class NetworkManager : MonoBehaviour {
         }
     }
 
-    public void MovePlayerOnServer(Player player, Vector3 posTo) {
+    public void MovePlayerOnServer(Player player, Vector3 posTo, Quaternion rotation) {
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["x"] = "" + posTo.x;
         data["y"] = "" + posTo.y;
         data["clientId"] = player.GetSocketId();
+        data["rotZ"] = "" + rotation.eulerAngles.z;
+        data["rotY"] = "" + rotation.eulerAngles.y;
 
         this.transform.position = posTo;
         socket.Emit("move", new JSONObject(data));
@@ -51,10 +53,12 @@ public class NetworkManager : MonoBehaviour {
     private void MovePlayer(SocketIO.SocketIOEvent e) {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
-
+        
         foreach(Player player in players) {
-            if(player.GetSocketId() == data["clientId"] &! player.GetIfMainPlayer())
+            if(player.GetSocketId() == data["clientId"] &! player.GetIfMainPlayer()) {
                 player.transform.position = new Vector3(float.Parse(data["x"]), float.Parse(data["y"]));
+                player.transform.rotation = Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"]));
+            }
         }
     }
 
@@ -67,7 +71,7 @@ public class NetworkManager : MonoBehaviour {
 
             GameObject newPlayer = Instantiate(playerPrefab,
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
-                Quaternion.Euler(float.Parse(data["rotX"]), float.Parse(data["rotY"]), 0));
+                Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
             Player player = newPlayer.GetComponent<Player>();
             player.Init(this, data["clientId"], true);
@@ -75,7 +79,7 @@ public class NetworkManager : MonoBehaviour {
         } else if(data["clientId"] != socket.sid) {
             GameObject newPlayer = Instantiate(playerPrefab,
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
-                Quaternion.Euler(float.Parse(data["rotX"]), float.Parse(data["rotY"]), 0));
+                Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
             Player player = newPlayer.GetComponent<Player>();
             player.Init(this, data["clientId"], false);
