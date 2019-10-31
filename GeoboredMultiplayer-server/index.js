@@ -22,9 +22,11 @@ io.on('connect', function(socket) {
         var dataObject = new JoinPacket(socket.id, data.x, data.y, data.rotX, data.rotY);
 
         //We need to send the new player all the other players! Otherwise he will be alone forever!!
-        connectedPlayers.forEach(player => {
-            socket.emit('join', player);
-        });
+        if(connectedPlayers != []) {
+            connectedPlayers.forEach(player => {
+                socket.emit('join', player);
+            });
+        }
 
         BroadCastToClients('join', dataObject);
         console.log(dataObject.clientId + " Joined the game");
