@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -11,10 +12,19 @@ public class UIHandler : MonoBehaviour
     private float slowDownLenght = 2f;
     private TextMeshProUGUI winText;
 
+    private GameObject haelth;
+    private TextMeshProUGUI healthText;
+    private Image primaryHealthBar, secondaryHealthBar;
+
     private void Start()
     {
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         winText = GameObject.FindWithTag("Canvas").transform.Find("WinText").GetComponent<TextMeshProUGUI>();
+
+        haelth = this.transform.Find("Health").gameObject;
+        healthText = haelth.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
+        primaryHealthBar = haelth.transform.Find("PrimaryHealthBar").GetComponent<Image>();
+        secondaryHealthBar = haelth.transform.Find("SecondaryHealthBar").GetComponent<Image>();
     }
 
     public void Singleplayer()
@@ -30,7 +40,27 @@ public class UIHandler : MonoBehaviour
         SceneManager.LoadScene("Test");
     }
 
-    public IEnumerator SlowMotion()
+    public void UpdateHealthBar(GameObject player, float health)
+    {
+        if(gameManager.ActivePlayer == player)
+        {
+            healthText.text = $"{Mathf.Floor(health)}";
+            primaryHealthBar.fillAmount = health / 100;
+            StartCoroutine(HealthBarEffect());
+        }
+        
+    }
+
+    private IEnumerator HealthBarEffect()
+    {
+        while (primaryHealthBar.fillAmount != secondaryHealthBar.fillAmount)
+        {
+            secondaryHealthBar.fillAmount = Mathf.Lerp(secondaryHealthBar.fillAmount, primaryHealthBar.fillAmount, 2f * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    public IEnumerator SlowMotionWin()
     {
         Time.timeScale = slowDownFector;
         Time.fixedDeltaTime = Time.timeScale * 0.2f;

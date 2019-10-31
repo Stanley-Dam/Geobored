@@ -7,21 +7,25 @@ public class CameraMovement : MonoBehaviour
     #region Variables
     [SerializeField] private Transform player;
     private Vector3 target, mousePos, refVel, shakeOffset, shakeVector;
-    [Tooltip("how far the camera should be when the mouse is at the end of the screan")]
     private float cameraDistance = 3.5f;
     private float smoothTime = 0.2f;
     private float zStart;
     private float shakeMag, shakeTimeEnd;
     private bool shaking;
+    private GameManager gameManager;
     #endregion
 
     private void Start()
     {
+        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        if (player == null)
+            player = gameManager.ActivePlayer.transform;
+        
         target = this.transform.position;
         zStart = this.transform.position.z;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         try
         {
@@ -30,12 +34,12 @@ public class CameraMovement : MonoBehaviour
             target = UpdateTargetPos();
             UpdateCameraPosition();
         }
-        catch { Debug.Log("Camera.maim not found"); }
+        catch { Debug.Log("player is missing"); }
     }
 
     private Vector3 CaptureMousePos()
     {
-        Vector2 ret = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        Vector2 ret = this.GetComponent<Camera>().ScreenToViewportPoint(Input.mousePosition);
         ret *= 2;
         ret -= Vector2.one;
         float max = 0.9f;

@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     private Color playerColor;
     private AudioSource audioS;
     private GameManager gameManager;
+    private UIHandler uiHandler;
     private string winString;
     #endregion
 
@@ -21,13 +22,11 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         haelth = GameObject.FindWithTag("Health");
-        healthText = haelth.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
-        primaryHealthBar = haelth.transform.Find("PrimaryHealthBar").GetComponent<Image>();
-        secondaryHealthBar = haelth.transform.Find("SecondaryHealthBar").GetComponent<Image>();
         killFX = (GameObject)Resources.Load("Player/FX/KillPlayerFX");
         playerColor = this.transform.Find("Sprite").GetComponent<SpriteRenderer>().color;
         audioS = this.GetComponent<AudioSource>();
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        uiHandler = GameObject.FindWithTag("Canvas").GetComponent<UIHandler>();
     }
 
     // Update is called once per frame
@@ -45,29 +44,19 @@ public class PlayerHealth : MonoBehaviour
         audioS.Play(0);
 
         health -= damage;
-        healthText.text = $"{Mathf.Floor(health)}";
-        primaryHealthBar.fillAmount = health / 100;
+        uiHandler.UpdateHealthBar(this.gameObject, health);
+
         if (health <= 0)
             KillPlayer();
-        StartCoroutine(HealthBarEffect());
     }
 
     private void KillPlayer()
     {
-        haelth.SetActive(false);
+        //haelth.SetActive(false);
         var killFXIns = Instantiate(killFX, this.transform.position, killFX.transform.rotation);
         killFXIns.GetComponent<PlaySoundParticel>().SetColor = playerColor;
         gameManager.PlayerDied(this.gameObject);
         Destroy(this.gameObject);
-    }
-
-    private IEnumerator HealthBarEffect()
-    {
-        while (primaryHealthBar.fillAmount != secondaryHealthBar.fillAmount)
-        {
-            secondaryHealthBar.fillAmount = Mathf.Lerp(secondaryHealthBar.fillAmount, primaryHealthBar.fillAmount, 2f * Time.deltaTime);
-            yield return null;
-        }
     }
 
     public string GetWinString { get { return this.winString; } }
