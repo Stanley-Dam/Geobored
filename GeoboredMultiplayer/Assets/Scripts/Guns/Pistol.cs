@@ -14,7 +14,7 @@ public class Pistol : Gun
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && canShoot)
-            StartCoroutine(Fire());
+        if (Input.GetMouseButtonDown(0))
+            Fire();
     }
 }

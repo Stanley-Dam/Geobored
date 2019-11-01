@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 
 let connectedSockets = [];
 let connectedPlayers = [];
+let bullets = [];
 
 /* 
 Mongo DB connection
@@ -66,6 +67,23 @@ io.on('connect', function(socket) {
         BroadCastToClients('move', data);
     });
 
+    socket.on('move_bullet', function(data) {
+        if(data.spawn) {
+            bullets.push(new Bullet(socket.id, data.x, data.y, data.rotX, data.rotY));
+        } else {
+            bullets.forEach(bullet => {
+                if(bullet.clientId == data.clientId){
+                    bullet.x = parseFloat(data.x);
+                    bullet.y = parseFloat(data.y);
+                    bullet.rotZ = parseFloat(data.rotZ);
+                    bullet.rotY = parseFloat(data.rotY);
+                }
+            });
+        }
+
+        BroadCastToClients('move_bullet', data);
+    });
+
 });
 
 function BroadCastToClients(functionName, data) {
@@ -81,6 +99,16 @@ http.listen(3000, function() {
 
 /* Server sided data objects (can be used as packets) */
 class Player {
+    constructor(clientId, x, y, rotZ, rotY) {
+        this.clientId = clientId;
+        this.x = parseFloat(x);
+        this.y = parseFloat(y);
+        this.rotZ = parseFloat(rotZ);
+        this.rotY = parseFloat(rotY);
+    }
+}
+
+class Bullet {
     constructor(clientId, x, y, rotZ, rotY) {
         this.clientId = clientId;
         this.x = parseFloat(x);

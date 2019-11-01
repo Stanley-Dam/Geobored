@@ -8,8 +8,6 @@ public class Gun : MonoBehaviour
     protected int damage;
     protected Transform bulletSpawner;
     protected float spread;
-    protected bool canShoot = true;
-    protected float coolDownTime = 0.01f;
 
     protected void Awake()
     {
@@ -17,18 +15,9 @@ public class Gun : MonoBehaviour
     }
 
     // Update is called once per frame
-    protected IEnumerator Fire()
+    protected void Fire()
     {
         Instantiate(bullet, bulletSpawner.position, bulletSpawner.rotation);
-        canShoot = false;
-        StartCoroutine(CoolDown());
-        yield return null;
-        
     }
 
-    private IEnumerator CoolDown()
-    {
-        yield return new WaitForSeconds(coolDownTime);
-        canShoot = true;
-    }
 }
