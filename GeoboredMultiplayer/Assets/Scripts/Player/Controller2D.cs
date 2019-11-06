@@ -37,6 +37,5 @@ public class Controller2D : MonoBehaviour
 
         if(player != null)
             player.GetNetworkManager().MovePlayerOnServer(player, rb.position + move * Time.deltaTime, this.transform.rotation);
-
     }
 }

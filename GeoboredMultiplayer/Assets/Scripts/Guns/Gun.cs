@@ -19,7 +19,7 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     protected IEnumerator Fire(int bulletAmount)
     {
-        for(int i = 0; i < bulletAmount; i++)
+        for (int i = 0; i < bulletAmount; i++)
         {
             bulletSpawner.localRotation = Quaternion.AngleAxis(Random.Range(-spread, spread), bulletSpawner.forward);
             var bulletIns = Instantiate(bullet, bulletSpawner.position, bulletSpawner.rotation);
