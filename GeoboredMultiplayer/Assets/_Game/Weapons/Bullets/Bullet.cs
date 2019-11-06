@@ -26,9 +26,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == 10 && collision.gameObject.GetComponent<Bullet>().BulletOwner == bulletOwner)
-        {
             Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), collision.gameObject.GetComponent<CircleCollider2D>());
-        }
         else
         {
             bulletSpeed = 0;

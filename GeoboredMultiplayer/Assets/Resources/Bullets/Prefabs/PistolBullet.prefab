@@ -212,7 +212,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!82 &7050901599370852725
 AudioSource:
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e608892b3d849e44a9476a4e821d2808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 22
+  bulletSpeed: 40
   damage: 50
 --- !u!1 &5401507177557088563
 GameObject:
