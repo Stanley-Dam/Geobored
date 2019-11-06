@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 let connectedPlayers = [];
+let bullets = [];
 
 /* 
 Mongo DB connection
@@ -20,11 +21,9 @@ io.on('connect', function(socket) {
         connectedPlayers.push(newPlayer);
 
         //We need to send the new player all the other players! Otherwise he will be alone forever!!
-        if(connectedPlayers != []) {
-            connectedPlayers.forEach(player => {
-                socket.emit('join', player);
-            });
-        }
+        connectedPlayers.forEach(player => {
+            socket.emit('join', player);
+        });
 
         BroadCastToClients('join', newPlayer);
         console.log(newPlayer.clientId + " Joined the game");
@@ -32,16 +31,14 @@ io.on('connect', function(socket) {
     });
     
     socket.on('disconnect', () => {
-<<<<<<< Updated upstream
-        connectedSockets.splice(socket);
-=======
         index = 0;
->>>>>>> Stashed changes
         connectedPlayers.forEach(player => {
             if(player.clientId == socket.id){
-                connectedPlayers.splice(player);
+                connectedPlayers.splice(index);
             }
+            index++;
         });
+
         var dataObject = new QuitPacket(socket.id);
     
         BroadCastToClients('quit', dataObject);
@@ -53,14 +50,14 @@ io.on('connect', function(socket) {
             if(player.clientId == data.clientId){
                 player.x = parseFloat(data.x);
                 player.y = parseFloat(data.y);
+                player.rotZ = parseFloat(data.rotZ);
+                player.rotY = parseFloat(data.rotY);
             }
         });
     
         BroadCastToClients('move', data);
     });
 
-<<<<<<< Updated upstream
-=======
     socket.on('bullet_spawn', function(data) {
         bullets.push(new Bullet(socket.id, data.bulletUUID, data.x, data.y, data.rotY, data.rotZ));
         BroadCastToClients('bullet_spawn', data);
@@ -78,7 +75,6 @@ io.on('connect', function(socket) {
         BroadCastToClients('bullet_hit', data);
     });
 
->>>>>>> Stashed changes
 });
 
 function BroadCastToClients(functionName, data) {
@@ -92,9 +88,6 @@ http.listen(3000, function() {
 
 /* Server sided data objects (can be used as packets) */
 class Player {
-<<<<<<< Updated upstream
-    constructor(clientId, x, y, rotX, rotY) {
-=======
     constructor(clientId, x, y, rotY, rotZ) {
         this.clientId = clientId;
         this.x = parseFloat(x);
@@ -106,31 +99,17 @@ class Player {
 
 class Bullet {
     constructor(clientId, bulletUUID, x, y, rotZ, rotY) {
->>>>>>> Stashed changes
         this.clientId = clientId;
         this.bulletUUID = bulletUUID;
         this.x = parseFloat(x);
         this.y = parseFloat(y);
-        this.rotX = parseFloat(rotX);
+        this.rotZ = parseFloat(rotZ);
         this.rotY = parseFloat(rotY);
     }
 }
 
 /* Packets */
 
-<<<<<<< Updated upstream
-class JoinPacket {
-    constructor(clientId, x, y, rotX, rotY) {
-        this.clientId = clientId;
-        this.x = x;
-        this.y = y;
-        this.rotX = rotX;
-        this.rotY = rotY;
-    }
-}
-
-=======
->>>>>>> Stashed changes
 class QuitPacket {
     constructor(clientId) {
         this.clientId = clientId;
