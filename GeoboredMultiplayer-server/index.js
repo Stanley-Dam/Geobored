@@ -3,7 +3,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-let connectedSockets = [];
 let connectedPlayers = [];
 
 /* 
@@ -17,9 +16,8 @@ var dataBase;
 io.on('connect', function(socket) {
 
     socket.on('join', (data) => {
-        connectedSockets.push(socket);
-        connectedPlayers.push(new Player(socket.id, data.x, data.y, data.rotX, data.rotY));
-        var dataObject = new JoinPacket(socket.id, data.x, data.y, data.rotX, data.rotY);
+        var newPlayer = new Player(socket.id, data.x, data.y, data.rotY, data.rotZ);
+        connectedPlayers.push(newPlayer);
 
         //We need to send the new player all the other players! Otherwise he will be alone forever!!
         if(connectedPlayers != []) {
@@ -28,12 +26,17 @@ io.on('connect', function(socket) {
             });
         }
 
-        BroadCastToClients('join', dataObject);
-        console.log(dataObject.clientId + " Joined the game");
+        BroadCastToClients('join', newPlayer);
+        console.log(newPlayer.clientId + " Joined the game");
+        
     });
     
     socket.on('disconnect', () => {
+<<<<<<< Updated upstream
         connectedSockets.splice(socket);
+=======
+        index = 0;
+>>>>>>> Stashed changes
         connectedPlayers.forEach(player => {
             if(player.clientId == socket.id){
                 connectedPlayers.splice(player);
@@ -56,12 +59,30 @@ io.on('connect', function(socket) {
         BroadCastToClients('move', data);
     });
 
+<<<<<<< Updated upstream
+=======
+    socket.on('bullet_spawn', function(data) {
+        bullets.push(new Bullet(socket.id, data.bulletUUID, data.x, data.y, data.rotY, data.rotZ));
+        BroadCastToClients('bullet_spawn', data);
+    });
+
+    socket.on('bullet_hit', function(data) {
+        var index = 0;
+        bullets.forEach(bullet => {
+            if(bullet.clientId == data.clientId && data.bulletUUID == bullet.bulletUUID){
+                bullets.splice(index);
+            }
+            index++;
+        });
+
+        BroadCastToClients('bullet_hit', data);
+    });
+
+>>>>>>> Stashed changes
 });
 
 function BroadCastToClients(functionName, data) {
-    connectedSockets.forEach(socket => {
-        socket.emit(functionName, data); 
-    });
+    io.sockets.clients().emit(functionName, data);
 }
 
 http.listen(3000, function() {
@@ -71,8 +92,23 @@ http.listen(3000, function() {
 
 /* Server sided data objects (can be used as packets) */
 class Player {
+<<<<<<< Updated upstream
     constructor(clientId, x, y, rotX, rotY) {
+=======
+    constructor(clientId, x, y, rotY, rotZ) {
         this.clientId = clientId;
+        this.x = parseFloat(x);
+        this.y = parseFloat(y);
+        this.rotZ = parseFloat(rotZ);
+        this.rotY = parseFloat(rotY);
+    }
+}
+
+class Bullet {
+    constructor(clientId, bulletUUID, x, y, rotZ, rotY) {
+>>>>>>> Stashed changes
+        this.clientId = clientId;
+        this.bulletUUID = bulletUUID;
         this.x = parseFloat(x);
         this.y = parseFloat(y);
         this.rotX = parseFloat(rotX);
@@ -82,6 +118,7 @@ class Player {
 
 /* Packets */
 
+<<<<<<< Updated upstream
 class JoinPacket {
     constructor(clientId, x, y, rotX, rotY) {
         this.clientId = clientId;
@@ -92,6 +129,8 @@ class JoinPacket {
     }
 }
 
+=======
+>>>>>>> Stashed changes
 class QuitPacket {
     constructor(clientId) {
         this.clientId = clientId;
