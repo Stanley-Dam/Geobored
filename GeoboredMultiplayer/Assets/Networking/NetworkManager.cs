@@ -60,7 +60,7 @@ public class NetworkManager : MonoBehaviour {
         socket.Emit("bullet_hit", new JSONObject(data));
     }
 
-    public void MovePlayerOnServer(Player player, Vector3 posTo, Quaternion rotation) {
+    public void MovePlayerOnServer(MultiPlayerPlayer player, Vector3 posTo, Quaternion rotation) {
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["x"] = "" + posTo.x;
         data["y"] = "" + posTo.y;
@@ -78,7 +78,7 @@ public class NetworkManager : MonoBehaviour {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
         
-        foreach(Player player in players) {
+        foreach(MultiPlayerPlayer player in players) {
             if(player.GetSocketId() == data["clientId"] &! player.GetIfMainPlayer()) {
                 player.transform.position = new Vector3(float.Parse(data["x"]), float.Parse(data["y"]));
                 player.transform.rotation = Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"]));
@@ -104,7 +104,7 @@ public class NetworkManager : MonoBehaviour {
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
-            Player player = newPlayer.GetComponent<Player>();
+            MultiPlayerPlayer player = newPlayer.GetComponent<MultiPlayerPlayer>();
             player.Init(this, data["clientId"], true);
             players.Add(player);
             cam.SetPlayer(newPlayer);
@@ -114,7 +114,7 @@ public class NetworkManager : MonoBehaviour {
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
-            Player player = newPlayer.GetComponent<Player>();
+            MultiPlayerPlayer player = newPlayer.GetComponent<MultiPlayerPlayer>();
             player.Init(this, data["clientId"], false);
             players.Add(player);
         }
@@ -125,7 +125,7 @@ public class NetworkManager : MonoBehaviour {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
 
-        foreach(Player player in players) {
+        foreach(MultiPlayerPlayer player in players) {
             if(player.GetSocketId() == data["clientId"])
                 Destroy(player.gameObject);
         }
