@@ -14,13 +14,12 @@ public class Gun : MonoBehaviour
     protected float coolDownTimeRemaining;
     protected Image gunIconOverlay;
     protected GameObject gunIcon;
-    private MultiPlayerPlayer multiPlayerPlayer;
+    [SerializeField] protected MultiPlayerPlayer multiPlayerPlayer;
 
     protected void Start()
     {
         bulletSpawner = this.transform.Find("BulletSpawner");
-        multiPlayerPlayer = this.GetComponent<MultiPlayerPlayer>();
-        if(true /*multiPlayerPlayer.GetIfMainPlayer()*/)
+        if(multiPlayerPlayer.GetIfMainPlayer())
         {
             Transform gunIconLocation = GameObject.FindWithTag("Health").transform.Find("Gun Icon");
             GameObject iconIns = Instantiate(gunIcon, gunIconLocation);

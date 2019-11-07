@@ -5,6 +5,7 @@ public class Controller2D : MonoBehaviour
     #region Variables
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private MultiPlayerPlayer player;
+    private bool isMainPlayer = false;
     private Rigidbody2D rb;
     private Vector2 move;
     private Camera cam;
@@ -14,6 +15,12 @@ public class Controller2D : MonoBehaviour
     {
         cam = Camera.main;
         rb = this.GetComponent<Rigidbody2D>();
+        if (player.GetIfMainPlayer())
+        {
+            isMainPlayer = true;
+            Debug.Log("faakkkaa");
+            cam.GetComponent<CameraMovement>().SetPlayer(this.gameObject);
+        }
     }
 
     private void Update()
@@ -35,7 +42,7 @@ public class Controller2D : MonoBehaviour
         move = input.normalized * movementSpeed;
         rb.MovePosition(rb.position + move * Time.deltaTime);
 
-        if(player != null)
+        if(isMainPlayer && player.GetNetworkManager() != null)
             player.GetNetworkManager().MovePlayerOnServer(player, rb.position + move * Time.deltaTime, this.transform.rotation);
     }
 }

@@ -9,12 +9,14 @@ public class GameManager : MonoBehaviour
     private List<GameObject> livingPlayers;
     private UIHandler uiHandler;
     private TextMeshProUGUI winText;
+    private Camera cam;
 
     private void Start()
     {
         Time.timeScale = 1f;
         livingPlayers = GameObject.FindGameObjectsWithTag("Player").ToList();
         uiHandler = GameObject.FindWithTag("Canvas").GetComponent<UIHandler>();
+        cam = Camera.main;
     }
 
     public void PlayerDied(GameObject deadPlayer)
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour
         livingPlayers.Remove(deadPlayer);
         if(livingPlayers.Count == 1)
         {
+            cam.GetComponent<CameraMovement>().SetPlayer(livingPlayers[0]);
             StartCoroutine(uiHandler.SlowMotion());
         }
     }

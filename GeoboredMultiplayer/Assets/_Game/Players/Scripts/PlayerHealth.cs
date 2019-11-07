@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource audioS;
     private GameManager gameManager;
     private string winString;
+    [SerializeField] private MultiPlayerPlayer MultiPlayerPlayer;
     #endregion
 
     // Use this for initialization
@@ -45,11 +46,15 @@ public class PlayerHealth : MonoBehaviour
         audioS.Play(0);
 
         health -= damage;
-        healthText.text = $"{Mathf.Floor(health)}";
-        primaryHealthBar.fillAmount = health / 100;
+        if(MultiPlayerPlayer.GetIfMainPlayer())
+        {
+            healthText.text = $"{Mathf.Floor(health)}";
+            primaryHealthBar.fillAmount = health / 100;
+            Debug.Log(this.name);
+            StartCoroutine(HealthBarEffect());
+        }
         if (health <= 0)
             KillPlayer();
-        StartCoroutine(HealthBarEffect());
     }
 
     private void KillPlayer()
