@@ -24,7 +24,7 @@ public class Gun : MonoBehaviour
         {
             Transform gunIconLocation = GameObject.FindWithTag("Health").transform.Find("Gun Icon");
             GameObject iconIns = Instantiate(gunIcon, gunIconLocation);
-            gunIconOverlay = iconIns.GetComponentInChildren<Image>();
+            gunIconOverlay = iconIns.transform.Find("IconBackGround").GetComponent<Image>();
         }
     }
 
@@ -53,6 +53,5 @@ public class Gun : MonoBehaviour
         }
         gunIconOverlay.fillAmount = 0;
         canShoot = true;
-        
     }
 }

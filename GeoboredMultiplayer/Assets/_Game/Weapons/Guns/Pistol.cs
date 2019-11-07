@@ -8,6 +8,7 @@ public class Pistol : Gun
     private void Awake()
     {
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/PistolBullet");
+        gunIcon = (GameObject)Resources.Load("WeaponIcons/GunIconPistol");
     }
 
     // Update is called once per frame

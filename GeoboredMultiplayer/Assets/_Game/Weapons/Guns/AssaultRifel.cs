@@ -6,7 +6,7 @@ public class AssaultRifel : Gun
     // Start is called before the first frame update
     private void Awake()
     {
-        coolDownTime = 0.1f;
+        coolDownTime = 0.15f;
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/PistolBullet");
         gunIcon = (GameObject)Resources.Load("WeaponIcons/GunIconAssaultRifel");
     }

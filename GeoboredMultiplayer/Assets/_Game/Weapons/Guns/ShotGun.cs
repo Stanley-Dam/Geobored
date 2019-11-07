@@ -9,6 +9,7 @@ public class ShotGun : Gun
     {
         spread = 7f;
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/ShotGunShell");
+        gunIcon = (GameObject)Resources.Load("WeaponIcons/GunIconShotgun");
     }
 
 
