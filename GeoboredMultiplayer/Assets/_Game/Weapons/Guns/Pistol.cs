@@ -5,7 +5,7 @@ using UnityEngine;
 public class Pistol : Gun
 {
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/PistolBullet");
     }

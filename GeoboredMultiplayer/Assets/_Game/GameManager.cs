@@ -6,7 +6,7 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    private List<GameObject> livingPlayers = new List<GameObject>();
+    private List<GameObject> livingPlayers;
     private UIHandler uiHandler;
     private TextMeshProUGUI winText;
 

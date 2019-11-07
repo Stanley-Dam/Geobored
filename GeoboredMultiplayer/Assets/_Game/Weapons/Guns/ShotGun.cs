@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShotGun : Gun
 {
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         spread = 7f;
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/ShotGunShell");

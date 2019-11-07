@@ -4,10 +4,11 @@ using System.Collections;
 public class AssaultRifel : Gun
 {
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         coolDownTime = 0.1f;
         bullet = (GameObject)Resources.Load("Bullets/Prefabs/PistolBullet");
+        gunIcon = (GameObject)Resources.Load("WeaponIcons/GunIconAssaultRifel");
     }
 
     // Update is called once per frame

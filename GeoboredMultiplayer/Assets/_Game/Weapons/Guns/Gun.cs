@@ -12,21 +12,19 @@ public class Gun : MonoBehaviour
     protected bool canShoot = true;
     protected float coolDownTime = 0.1f;
     protected float coolDownTimeRemaining;
-    protected Image gunIconForeground, gunIconBackground;
-    [SerializeField] protected Sprite gunIcon;
+    protected Image gunIconOverlay;
+    protected GameObject gunIcon;
     private MultiPlayerPlayer multiPlayerPlayer;
 
-    protected void Awake()
+    protected void Start()
     {
         bulletSpawner = this.transform.Find("BulletSpawner");
         multiPlayerPlayer = this.GetComponent<MultiPlayerPlayer>();
         if(true /*multiPlayerPlayer.GetIfMainPlayer()*/)
         {
-            Transform gunIcons = GameObject.FindWithTag("Health").transform.Find("Gun Icon");
-            gunIconForeground = gunIcons.Find("Gun ForeGround").gameObject.GetComponent<Image>();
-            gunIconBackground = gunIcons.Find("Gun BackGround").gameObject.GetComponent<Image>();
-            gunIconForeground.sprite = gunIcon;
-            gunIconBackground.sprite = gunIcon;
+            Transform gunIconLocation = GameObject.FindWithTag("Health").transform.Find("Gun Icon");
+            GameObject iconIns = Instantiate(gunIcon, gunIconLocation);
+            gunIconOverlay = iconIns.GetComponentInChildren<Image>();
         }
     }
 
@@ -51,9 +49,9 @@ public class Gun : MonoBehaviour
         {
             yield return null;
             float fillAmount = 1 * coolDownTimeRemaining / coolDownTime;
-            gunIconBackground.fillAmount = fillAmount;
+            gunIconOverlay.fillAmount = fillAmount;
         }
-        gunIconBackground.fillAmount = 0;
+        gunIconOverlay.fillAmount = 0;
         canShoot = true;
         
     }

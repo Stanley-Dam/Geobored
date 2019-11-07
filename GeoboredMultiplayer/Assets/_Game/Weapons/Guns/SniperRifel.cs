@@ -10,7 +10,7 @@ public class SniperRifel : Gun
     private GameObject hitFX;
 
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         lr = this.GetComponent<LineRenderer>();
         bulletSpawner = this.transform.Find("BulletSpawner");
