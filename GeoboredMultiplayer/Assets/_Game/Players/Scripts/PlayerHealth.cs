@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 
 [RequireComponent(typeof(AudioSource))]
@@ -16,11 +17,11 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject killFX;
     private Color playerColor;
     [SerializeField] private AudioSource audioS;
-    private GameManager gameManager;
     [SerializeField] private string winMessage = "";
 
     [Header("Misc")]
     [SerializeField] private MultiPlayerPlayer MultiPlayerPlayer;
+    private GameManager gameManager;
     private GameObject killer;
     private bool isMainPlayer = false;
     #endregion
@@ -47,6 +48,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (!audioS.enabled)
+            audioS.enabled = true;
         //plays sound fx with random pitch
         float pitch = Random.Range(0.9f, 1.1f);
         audioS.pitch = pitch;
@@ -65,6 +68,11 @@ public class PlayerHealth : MonoBehaviour
 
     private void KillPlayer()
     {
+        if(playerColor == null)
+        {
+            List<GameObject> players = gameManager.LivingPlayers;
+            killer = players[Random.Range(0, players.Count)];
+        }
         Camera.main.GetComponent<CameraMovement>().SetPlayer(killer);
         killer.GetComponentInParent<PlayerHealth>().SetIsMainPlayer(true);
         GameObject killFXIns = Instantiate(killFX, this.transform.position, killFX.transform.rotation);

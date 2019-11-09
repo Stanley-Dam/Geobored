@@ -55,8 +55,8 @@ public class Bullet : MonoBehaviour
             if (collision.gameObject.layer == 9 && collision.gameObject != bulletOwner)
             {
                 PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
-                player.TakeDamage(damage);
                 player.Killer = bulletOwner;
+                player.TakeDamage(damage);
             }
             Destroy(this.gameObject);
         }

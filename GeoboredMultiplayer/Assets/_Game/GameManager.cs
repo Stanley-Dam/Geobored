@@ -7,7 +7,7 @@ using System.Linq;
 public class GameManager : MonoBehaviour
 {
     #region Variables
-    public List<GameObject> livingPlayers;
+    private List<GameObject> livingPlayers;
     private UIHandler uiHandler;
     private TextMeshProUGUI winText;
     private Camera cam;
@@ -31,6 +31,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public List<GameObject> GetLivingPlayers { get { return this.livingPlayers; } }
+    public List<GameObject> LivingPlayers { get { return livingPlayers; } }
 
 }

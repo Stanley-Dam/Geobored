@@ -36,8 +36,8 @@ public class UIHandler : MonoBehaviour
         Time.timeScale = slowDownFector;
         Time.fixedDeltaTime = Time.timeScale * 0.2f;
         yield return new WaitForSeconds(0.1f);
-        string text = gameManager.GetLivingPlayers[0].GetComponent<PlayerHealth>().WinMessage;
-        winText.color = gameManager.GetLivingPlayers[0].GetComponent<PlayerHealth>().PlayerColor;
+        string text = gameManager.LivingPlayers[0].GetComponent<PlayerHealth>().WinMessage;
+        winText.color = gameManager.LivingPlayers[0].GetComponent<PlayerHealth>().PlayerColor;
         if (text != "" && text != null)
             winText.text = text;
         else
