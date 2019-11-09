@@ -6,8 +6,10 @@ using System.Linq;
 
 public class Generator : MonoBehaviour
 {
+    #region Variables
     [SerializeField] private int seed = 1;
     private List<GameObject> spawners;
+    #endregion
 
     // Use this for initialization
     void Start()

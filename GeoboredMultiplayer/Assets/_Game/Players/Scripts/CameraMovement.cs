@@ -74,10 +74,11 @@ public class CameraMovement : MonoBehaviour
         return tempOffset;
     }
 
+
+    //getters and setters
     public void SetPlayer(GameObject player)
     {
         this.player = player.transform;
         this.Start();
     }
-
 }

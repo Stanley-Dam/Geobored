@@ -6,10 +6,12 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    private List<GameObject> livingPlayers;
+    #region Variables
+    public List<GameObject> livingPlayers;
     private UIHandler uiHandler;
     private TextMeshProUGUI winText;
     private Camera cam;
+    #endregion
 
     private void Start()
     {

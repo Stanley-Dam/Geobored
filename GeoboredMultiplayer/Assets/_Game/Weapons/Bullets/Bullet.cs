@@ -2,25 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Bullet : MonoBehaviour
 {
     #region Variables
-    [SerializeField] protected float bulletSpeed;
-    [SerializeField] protected int damage;
-    protected GameObject hitFX;
-    protected AudioSource audioS;
-    protected GameObject bulletOwner;
+    [SerializeField] private GameObject hitFX;
+    [SerializeField] private AudioSource audioS;
+    private int damage;
+    private float bulletSpeed;
+    private GameObject bulletOwner;
     #endregion
 
-    private void Awake()
+    private void Start()
     {
-        hitFX = (GameObject)Resources.Load("Bullets/FX/hitFX");
-        audioS = this.GetComponent<AudioSource>();
-
         //plays sound fx with random pitch
         float pitch = Random.Range(0.9f, 1.1f);
         audioS.pitch = pitch;
         audioS.Play(0);
+    }
+
+    private void Update()
+    {
+        this.transform.position += transform.right * bulletSpeed * Time.deltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -37,23 +40,29 @@ public class Bullet : MonoBehaviour
 
             if (hitFX)
             {
-                var hitFXIns = Instantiate(hitFX, pos, rot);
+                GameObject hitFXIns = Instantiate(hitFX, pos, rot);
                 try
                 {
                     Color color = collision.transform.GetComponent<SpriteRenderer>().color;
-                    hitFXIns.GetComponent<PlaySoundParticel>().SetColor = color;
+                    hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = color;
                 }
                 catch
                 {
-                    hitFXIns.GetComponent<PlaySoundParticel>().SetColor = Color.white;
+                    hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = Color.white;
                 }
 
             }
             if (collision.gameObject.layer == 9 && collision.gameObject != bulletOwner)
-                collision.gameObject.SendMessage("TakeDamage", damage);
+            {
+                PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
+                player.TakeDamage(damage);
+                player.Killer = bulletOwner;
+            }
             Destroy(this.gameObject);
         }
     }
 
+    public int SetDamage { get { return damage; } set { damage = value; } }
+    public float SetBulletSpeed { get { return bulletSpeed; } set { bulletSpeed = value; } }
     public GameObject BulletOwner { get { return bulletOwner; } set { bulletOwner = value; } }
 }

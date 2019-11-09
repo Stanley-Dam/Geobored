@@ -7,7 +7,6 @@ public class MultiPlayerPlayer : MonoBehaviour {
     private NetworkManager netWorkManager;
     private string socketId;
     private bool mainPlayer;
-    [SerializeField] private bool mainPlayerTest = false;
 
     public void Init(NetworkManager netWorkManager, string socketId, bool mainPlayer) {
         this.netWorkManager = netWorkManager;
@@ -21,11 +20,10 @@ public class MultiPlayerPlayer : MonoBehaviour {
     }
 
     public bool GetIfMainPlayer() {
-        if (mainPlayerTest)
+        if(netWorkManager == null)
             return true;
-        else if(netWorkManager == null)
-            return true;
-        return mainPlayer;
+        else
+            return mainPlayer;
     }
 
     public NetworkManager GetNetworkManager() {
