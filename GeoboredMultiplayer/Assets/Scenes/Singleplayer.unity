@@ -1379,6 +1379,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+<<<<<<< Updated upstream:GeoboredMultiplayer/Assets/Scenes/Singleplayer.unity
+=======
+    - target: {fileID: 2923287565941197518, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2923287567627714319, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 267768491}
+>>>>>>> Stashed changes:GeoboredMultiplayer/Assets/_Game/Players/PlayerTest.unity
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3c67b1d3aebeaf4f838e6443638ad11, type: 3}
 --- !u!1001 &6070517940845013805
