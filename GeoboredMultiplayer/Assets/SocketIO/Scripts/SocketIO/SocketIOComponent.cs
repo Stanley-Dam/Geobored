@@ -40,9 +40,10 @@ namespace SocketIO
 {
 	public class SocketIOComponent : MonoBehaviour
 	{
-		#region Public Properties
+        #region Public Properties
 
-		public string url = "ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket";
+        public string serverIp = "localhost";
+        public string serverPort = "3000";
 		public bool autoConnect = true;
 		public int reconnectDelay = 5;
 		public float ackExpirationTime = 1800f;
@@ -53,11 +54,12 @@ namespace SocketIO
 		public string sid { get; set; }
 		public bool IsConnected { get { return connected; } }
 
-		#endregion
+        #endregion
 
-		#region Private Properties
+        #region Private Properties
 
-		private volatile bool connected;
+        private string url;
+        private volatile bool connected;
 		private volatile bool thPinging;
 		private volatile bool thPong;
 		private volatile bool wsConnected;
@@ -91,7 +93,8 @@ namespace SocketIO
 
 		public void Awake()
 		{
-			encoder = new Encoder();
+            url = "ws://" + serverIp + ":" + serverPort + "/socket.io/?EIO=4&transport=websocket";
+            encoder = new Encoder();
 			decoder = new Decoder();
 			parser = new Parser();
 			handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
@@ -168,6 +171,15 @@ namespace SocketIO
 
 		#region Public Interface
 		
+        public void ReConnect(string port) {
+            OnDestroy();
+            Close();
+            serverPort = port;
+            Awake();
+            Start();
+            Connect();
+        }
+
 		public void Connect()
 		{
 			connected = true;

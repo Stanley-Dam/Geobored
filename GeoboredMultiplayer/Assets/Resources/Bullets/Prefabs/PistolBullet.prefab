@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6892673901648295760}
   - component: {fileID: 7739493306835260483}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LightTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6999470096499295603}
   - component: {fileID: 1845132150681604362}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Point Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,9 +152,9 @@ GameObject:
   - component: {fileID: 7520433696070128373}
   - component: {fileID: 2553514205135446402}
   - component: {fileID: 7050901599370852725}
-  - component: {fileID: 1623698781742498534}
-  - component: {fileID: 7200287433434109752}
-  m_Layer: 0
+  - component: {fileID: 639783467502243215}
+  - component: {fileID: 5237361300635352668}
+  m_Layer: 10
   m_Name: PistolBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3386744005717095951}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.19, y: 0.473, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 203986295613719760}
@@ -213,7 +213,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!82 &7050901599370852725
 AudioSource:
@@ -311,7 +311,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1623698781742498534
+--- !u!114 &639783467502243215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -320,13 +320,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3386744005717095951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ea9e980753bc654485ee83b3e17f4e7, type: 3}
+  m_Script: {fileID: 11500000, guid: e608892b3d849e44a9476a4e821d2808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 22
+  bulletSpeed: 40
   damage: 50
-  multiplayerBullet: {fileID: 7200287433434109752}
---- !u!114 &7200287433434109752
+--- !u!114 &5237361300635352668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -348,7 +347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 203986295613719760}
   - component: {fileID: 8041869333493738696}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
