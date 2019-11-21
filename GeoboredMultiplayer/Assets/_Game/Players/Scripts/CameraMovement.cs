@@ -5,9 +5,8 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private Transform player;
+    private Transform player;
     private Vector3 target, mousePos, refVel, shakeOffset, shakeVector;
-    [Tooltip("how far the camera should be when the mouse is at the end of the screan")]
     private float cameraDistance = 3.5f;
     private float smoothTime = 0.2f;
     private float zStart;
@@ -21,16 +20,12 @@ public class CameraMovement : MonoBehaviour
         zStart = this.transform.position.z;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        try
-        {
-            mousePos = CaptureMousePos();
-            shakeOffset = UpdateShake();
-            target = UpdateTargetPos();
-            UpdateCameraPosition();
-        }
-        catch { Debug.Log("Camera.maim not found"); }
+        mousePos = CaptureMousePos();
+        shakeOffset = UpdateShake();
+        target = UpdateTargetPos();
+        UpdateCameraPosition();
     }
 
     private Vector3 CaptureMousePos()
@@ -79,10 +74,11 @@ public class CameraMovement : MonoBehaviour
         return tempOffset;
     }
 
+
+    //getters and setters
     public void SetPlayer(GameObject player)
     {
         this.player = player.transform;
         this.Start();
     }
-
 }
