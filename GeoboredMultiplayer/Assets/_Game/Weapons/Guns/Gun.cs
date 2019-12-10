@@ -27,7 +27,7 @@ public class Gun : MonoBehaviour
 
     private void Start()
     {
-        foreach (Transform child in transform.parent)
+        foreach (Transform child in transform)
         {
             if (child.name == "BulletSpawner")
                 bulletSpawner = child;

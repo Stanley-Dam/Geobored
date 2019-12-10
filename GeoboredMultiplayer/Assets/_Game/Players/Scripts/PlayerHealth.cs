@@ -68,7 +68,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void KillPlayer()
     {
-        if(playerColor == null)
+        if(killer == null)
         {
             List<GameObject> players = gameManager.LivingPlayers;
             killer = players[Random.Range(0, players.Count)];

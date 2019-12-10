@@ -33,30 +33,32 @@ public class Bullet : MonoBehaviour
         else
         {
             bulletSpeed = 0;
-
-            ContactPoint2D contact = collision.GetContact(0);
-            Quaternion rot = Quaternion.FromToRotation(Vector3.up, contact.normal);
-            Vector3 pos = contact.point;
-
-            if (hitFX)
+            if (bulletOwner != null)
             {
-                GameObject hitFXIns = Instantiate(hitFX, pos, rot);
-                try
-                {
-                    Color color = collision.transform.GetComponent<SpriteRenderer>().color;
-                    hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = color;
-                }
-                catch
-                {
-                    hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = Color.white;
-                }
+                ContactPoint2D contact = collision.GetContact(0);
+                Quaternion rot = Quaternion.FromToRotation(Vector3.up, contact.normal);
+                Vector3 pos = contact.point;
 
-            }
-            if (collision.gameObject.layer == 9 && collision.gameObject != bulletOwner)
-            {
-                PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
-                player.Killer = bulletOwner;
-                player.TakeDamage(damage);
+                if (hitFX)
+                {
+                    GameObject hitFXIns = Instantiate(hitFX, pos, rot);
+                    try
+                    {
+                        Color color = collision.transform.GetComponent<SpriteRenderer>().color;
+                        hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = color;
+                    }
+                    catch
+                    {
+                        hitFXIns.GetComponent<PlaySoundParticel>().ParticelColor = Color.white;
+                    }
+
+                }
+                if (collision.gameObject.layer == 9 && collision.gameObject != bulletOwner)
+                {
+                    PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
+                    player.Killer = bulletOwner;
+                    player.TakeDamage(damage);
+                }
             }
             Destroy(this.gameObject);
         }

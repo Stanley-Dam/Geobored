@@ -44,12 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   singleFire: 0
-  bulletSpawner: {fileID: 0}
   bullet: {fileID: 3386744005717095951, guid: 4a2b005aadb653649ba42e92e36070de, type: 3}
   bulletAmount: 1
   damage: 15
-  bulletSpeed: 40
+  bulletSpeed: 25
   spread: 2
   coolDownTime: 0.1
   gunIcon: {fileID: 6155470364401627647, guid: 208170b87963d334cb790e79afde2260, type: 3}
-  multiPlayerPlayer: {fileID: 0}

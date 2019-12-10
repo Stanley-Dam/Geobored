@@ -20,10 +20,7 @@ public class MultiPlayerPlayer : MonoBehaviour {
     }
 
     public bool GetIfMainPlayer() {
-        if(netWorkManager == null)
-            return true;
-        else
-            return mainPlayer;
+        return mainPlayer;
     }
 
     public NetworkManager GetNetworkManager() {

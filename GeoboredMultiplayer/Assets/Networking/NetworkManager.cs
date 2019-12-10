@@ -4,26 +4,25 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
-
     [SerializeField] private SocketIO.SocketIOComponent socket;
     [SerializeField] private CameraMovement cam;
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private List<GameObject> playerPrefabs;
+    [SerializeField] private List<GameObject> bulletPrefabs;
 
+    private int selectedTypeId = 0;
     private ArrayList bullets = new ArrayList();
     private ArrayList players = new ArrayList();
     private bool joined = false;
 
     // Start is called before the first frame update
     void Start() {
-
         //Start listening to all the server events
+        socket.On("redirectToServer", Redirect);
         socket.On("move", MovePlayer);
         socket.On("join", PlayerJoin);
         socket.On("quit", PlayerQuit);
         socket.On("bullet_spawn", BulletSpawn);
         socket.On("connect", PlayerJoinServer);
-        socket.On("bullet_hit", BulletHitReceive);
     }
 
     /* Send data to the server. */
@@ -31,6 +30,7 @@ public class NetworkManager : MonoBehaviour {
     private void PlayerJoinServer(SocketIO.SocketIOEvent e) {
         if(!joined) {
             Dictionary<string, string> data = new Dictionary<string, string>();
+            data["playerTypeId"] = "" + selectedTypeId;
             data["x"] = "" + this.transform.position.x;
             data["y"] = "" + this.transform.position.y;
             data["rotZ"] = "" + this.transform.rotation.z;
@@ -40,10 +40,11 @@ public class NetworkManager : MonoBehaviour {
         }
     }
 
-    public void SpawnBulletOnServer(Vector3 position, Quaternion rotation) {
+    public void SpawnBulletOnServer(Vector3 position, Quaternion rotation, int bulletTypeId) {
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["clientId"] = "" + this.socket.sid;
         data["bulletUUID"] = "" + System.Guid.NewGuid();
+        data["bulletTypeId"] = "" + bulletTypeId;
         data["x"] = "" + position.x;
         data["y"] = "" + position.y;
         data["rotY"] = "" + rotation.eulerAngles.y;
@@ -74,6 +75,15 @@ public class NetworkManager : MonoBehaviour {
 
     /* Receive data from the server */
 
+    private void Redirect(SocketIO.SocketIOEvent e) {
+        string eventAsString = "" + e.data;
+        Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
+
+        socket.ReConnect(data["port"]);
+        //Start registering new data
+        this.Start();
+    }
+
     private void MovePlayer(SocketIO.SocketIOEvent e) {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
@@ -100,7 +110,7 @@ public class NetworkManager : MonoBehaviour {
         if(data["clientId"] == this.socket.sid &! joined) {
             joined = true;
 
-            GameObject newPlayer = Instantiate(playerPrefab,
+            GameObject newPlayer = Instantiate(playerPrefabs[int.Parse(data["playerTypeId"])],
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
@@ -110,7 +120,7 @@ public class NetworkManager : MonoBehaviour {
             cam.SetPlayer(newPlayer);
 
         } else if(data["clientId"] != this.socket.sid) {
-            GameObject newPlayer = Instantiate(playerPrefab,
+            GameObject newPlayer = Instantiate(playerPrefabs[int.Parse(data["playerTypeId"])],
                 new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
                 Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
@@ -134,23 +144,11 @@ public class NetworkManager : MonoBehaviour {
     /* Bullets
      */
 
-    private void BulletHitReceive(SocketIO.SocketIOEvent e) {
-        string eventAsString = "" + e.data;
-        Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
-
-        foreach(MultiPlayerBullet bullet in bullets) {
-            if(bullet.GetSocketId() == data["clientId"]) {
-                bullets.Remove(bullet);
-                Destroy(bullet.gameObject);
-            }
-        }
-    }
-
     private void BulletSpawn(SocketIO.SocketIOEvent e) {
         string eventAsString = "" + e.data;
         Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(eventAsString);
 
-        GameObject newBullet = Instantiate(bulletPrefab,
+        GameObject newBullet = Instantiate(bulletPrefabs[int.Parse(data["bulletTypeId"])],
         new Vector3(float.Parse(data["x"]), float.Parse(data["y"])),
         Quaternion.Euler(0, float.Parse(data["rotY"]), float.Parse(data["rotZ"])));
 
@@ -158,4 +156,15 @@ public class NetworkManager : MonoBehaviour {
         bullet.Init(this, data["clientId"], data["clientId"] == this.socket.sid, data["bulletUUID"]);
         bullets.Add(bullet);
     }
+
+    /* GETTERS & SETTERS
+     */
+
+    public void SetPlayerType(int typeId) {
+        if(typeId > playerPrefabs.Count || typeId < 0)
+            selectedTypeId = 0;
+
+        selectedTypeId = typeId;
+    }
+
 }

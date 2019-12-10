@@ -178,7 +178,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
       propertyPath: url
-      value: ws://localhost:3000/socket.io/?EIO=4&transport=websocket
+      value: ws://localhost:6969/socket.io/?EIO=4&transport=websocket
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
+      propertyPath: serverPort
+      value: 3000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
@@ -687,6 +691,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3075116477122953348, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116477122953348, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116477122953348, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -611
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116476917175583, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116476917175583, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116476917175583, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075116476917175583, guid: 2c102828b3b5f534a8a98493f67d55b3,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c102828b3b5f534a8a98493f67d55b3, type: 3}
 --- !u!1 &1282204172
@@ -804,11 +843,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   socket: {fileID: 191229281}
-  cam: {fileID: 1826482306}
-  playerPrefab: {fileID: 5836739053031464172, guid: ee98d482142dafc4db0a37393b37c724,
-    type: 3}
-  bulletPrefab: {fileID: 3386744005717095951, guid: 4457ad8c4a73fbc42b172ae95034b869,
-    type: 3}
+  cam: {fileID: 0}
+  playerPrefabs:
+  - {fileID: 5836739053031464172, guid: 85bc8020bf2525d4d8954db466ce7624, type: 3}
+  - {fileID: 8470972022944218031, guid: 1b1d7f5f26aa7ac4bb076270fe4c2001, type: 3}
+  - {fileID: 2315941963532759249, guid: 107c8da1e76f6744295e434b1f220e9a, type: 3}
+  - {fileID: 8215012063235317716, guid: f287d01e1b9b20242bc0ff4991c707fd, type: 3}
+  bulletPrefabs:
+  - {fileID: 3386744005717095951, guid: 4457ad8c4a73fbc42b172ae95034b869, type: 3}
+  - {fileID: 3386744005717095951, guid: 57bd0fca409a93f46b27af267c130c63, type: 3}
 --- !u!4 &1628459193
 Transform:
   m_ObjectHideFlags: 0
@@ -1013,18 +1056,6 @@ MonoBehaviour:
   - {x: 0.5, y: -15, z: 0}
   - {x: 0.5, y: 15, z: 0}
   - {x: -0.5, y: 15, z: 0}
---- !u!114 &1826482306 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3075116478193693678, guid: 2c102828b3b5f534a8a98493f67d55b3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1195413250}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10e2c0f4b8bbea44eb1ebab438039019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2090318683
 GameObject:
   m_ObjectHideFlags: 0
